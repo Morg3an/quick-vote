@@ -33,7 +33,7 @@
 
 ```bash
 git clone https://github.com/Morg3an/quick-vote.git
-cd quickvote
+cd quick-vote
 ```
 
 #### 2. Install Dependencies
