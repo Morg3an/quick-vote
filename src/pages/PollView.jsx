@@ -74,18 +74,34 @@ const PollView = () => {
 
   const handleVote = async () => {
     if (selectedOption === null || poll?.isClosed) return;
-
+  
+    const {
+      data: { user },
+      error: userError
+    } = await supabase.auth.getUser();
+  
+    if (userError || !user) {
+      alert('You must be logged in to vote.');
+      return;
+    }
+  
     const { error } = await supabase.from('votes').insert([
       {
         poll_id: id,
-        option_index: selectedOption.id
+        option_index: selectedOption.id,
+        user_id: user.id
       }
     ]);
-
-    if (!error) {
-      setSelectedOption(null);
+  
+    if (error) {
+      console.error('Vote submission failed:', error);
+      alert('Failed to submit your vote. You may have already voted.');
+      return;
     }
+  
+    setSelectedOption(null);
   };
+  
 
   const handleDelete = async () => {
     if (!poll || adminToken !== poll.adminToken) return;
